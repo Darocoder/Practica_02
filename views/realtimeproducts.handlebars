@@ -1,0 +1,37 @@
+<h1>Realtime Products</h1>
+<!--
+este formulario VA a la url de action, que NO es lo que queremos.
+<form method="post" action="http://localhost:8080/api/products/">
+
+Al quitarlo, lo que hacer es ir su misma URL por post.
+Lo que necesitamos es atajar eso desde JS y handlearlo por nuestra cuenta.
+
+-->
+
+<form method="post" id="formularioAgregarProducto">
+  <label>Title</label>
+  <input name="title"></input> <br><br>
+  
+  <label>Description</label>
+  <input name="description"></input> <br><br>
+
+  <label>Price</label>
+  <input name="price"></input> <br><br>
+
+  <label>Code</label>
+  <input name="code" placeholder=" no repetir códigos" ></input><br><br>
+
+  <input type="submit" value="Send"></input>
+</form>
+
+{{#each productos}}
+  <ul>
+    <li>{{this.title}}</li>
+    <li>{{this.description}}</li>
+    <li>{{this.price}}</li>
+    <li>{{this.code}}</li>  
+  </ul>
+{{/each}}
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/index.js"></script>
