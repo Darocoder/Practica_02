@@ -1,5 +1,6 @@
 import fs from "fs";
 import {avisarQueActualizaronProductos} from "./app.js"
+import { productModel } from "./Dao/models/products.model.js"
 
 export class Product {
     constructor({title, description, price, status, thumbnail, code, stock}){
@@ -16,9 +17,12 @@ export class Product {
 
 export class ProductManager {
 
+    productModel
+
     constructor(){
         this.products= [],
         this.path = "productos.json"
+        this.productModel = productModel
     }
 
     getProductsFromArray(){
@@ -26,10 +30,18 @@ export class ProductManager {
         return this.products
     }
 
-    getProducts(){
-        //console.log("Nuevo array desde fs " + this.path)
-        this.products = JSON.parse(fs.readFileSync(this.path))
+    async getProducts(){
+        try{
+                    //console.log("Nuevo array desde fs " + this.path)
+        //this.products = JSON.parse(fs.readFileSync(this.path))
+        this.products = this.products.find()
         return this.products
+        }
+        catch(err){
+            console.log("Error al leer mongodb", err)
+            this.products = [] 
+        }
+
     }
 
     saveProducts(){
