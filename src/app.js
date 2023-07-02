@@ -7,6 +7,7 @@ import handlebars from "express-handlebars"
 import { Server } from "socket.io"
 import { ProductManager } from "./product_manager.js";
 import mongoose from "mongoose";
+import chatRouter from "../src/routes/chat-route.js"
 
 const app = express();
 const PORT = 8080;
@@ -22,6 +23,7 @@ app.use("/", viewsRouter)
 app.set("views", `${__dirname}/views`);
 app.set ("view engine", "handlebars");
 app.use(express.static(__dirname+"/public"));
+app.use("/chat",chatRouter)
 
 const servidorHttp = app.listen(PORT, () => {
     console.log(`servidor en el puerto ${PORT}`)
