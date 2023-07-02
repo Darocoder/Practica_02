@@ -6,6 +6,7 @@ import __dirname from "./utils.js"
 import handlebars from "express-handlebars"
 import { Server } from "socket.io"
 import { ProductManager } from "./product_manager.js";
+import mongoose from "mongoose";
 
 const app = express();
 const PORT = 8080;
@@ -53,5 +54,13 @@ function avisarQueActualizaronProductos() {
     console.log("aviso que actualizaron productos: " + productos.length);
     io.emit("actualizar_productos",productos);
 }
+
+
+const MONGO_ATLAS = "mongodb+srv://dverdicchio:M0ng0Dario@mongodv.ga2gvnk.mongodb.net/"
+const connection = mongoose.connect(MONGO_ATLAS).then((conn) => {
+    console.log("Conectado a la DB Atlas");
+}).catch ((err) =>{
+    console.log("Error:" +  err)
+})
 
 export {avisarQueActualizaronProductos}
