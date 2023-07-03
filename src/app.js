@@ -58,9 +58,10 @@ function avisarQueActualizaronProductos() {
 }
 
 
-const MONGO_ATLAS = "mongodb+srv://dverdicchio:M0ng0Dario@mongodv.ga2gvnk.mongodb.net/"
+const MONGO_ATLAS = "mongodb+srv://dverdicchio:M0ng0Dario@mongodv.ga2gvnk.mongodb.net/ecommerce"
 const connection = mongoose.connect(MONGO_ATLAS).then((conn) => {
     console.log("Conectado a la DB Atlas");
+    console.log("Esto tengo en la DB", connection)
 }).catch ((err) =>{
     console.log("Error:" +  err)
 })

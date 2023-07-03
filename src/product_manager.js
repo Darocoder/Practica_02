@@ -34,7 +34,8 @@ export class ProductManager {
         try{
                     //console.log("Nuevo array desde fs " + this.path)
         //this.products = JSON.parse(fs.readFileSync(this.path))
-        this.products = this.products.find()
+        this.products = await productModel.find()
+        console.log("console log de test", this.products)
         return this.products
         }
         catch(err){

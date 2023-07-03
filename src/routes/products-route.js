@@ -7,8 +7,9 @@ const router = Router();
 router.get('/', (req, res) => {
     const productsManager = new ProductManager();
     const products = productsManager.getProducts();
-    const productSlice = products.slice(0, req.query.limit);
-    res.send(JSON.stringify(productSlice));
+    //const productSlice = products.slice(0, req.query.limit);
+    //res.send(JSON.stringify(productSlice));
+    res.send(products)
 })
 
 router.get("/:pid", (req, res) => {
