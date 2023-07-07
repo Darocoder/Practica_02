@@ -1,66 +1,76 @@
 import { Router } from "express";
 import { ProductManager, Product } from "../product_manager.js"
+import { productModel } from "../Dao/models/products.model.js";
 
 const router = Router();
 
 
-router.get('/', (req, res) => {
-    const productsManager = new ProductManager();
-    const products = productsManager.getProducts();
-    //const productSlice = products.slice(0, req.query.limit);
-    //res.send(JSON.stringify(productSlice));
+router.get('/', async (req, res) => {
+    let products =  await productModel.find()
     res.send(products)
 })
 
-router.get("/:pid", (req, res) => {
-    const manejadorDeProductos = new ProductManager();
-    manejadorDeProductos.getProducts();
-    console.log(manejadorDeProductos.products);
-    const pid = parseInt(req.params.pid); //convierto el id a número
-    if (isNaN(pid)) { //si el id no es un número devuelvo el error 400
-        res.status(400).send("El id debe ser un número.");
-        return;
+router.get("/:pid", async (req, res) => {    
+    try{
+        const pid = req.params.pid;
+        let product = await productModel.find({_id: pid})
+        res.send(product);
     }
-    const product = manejadorDeProductos.getProductByID(req.params.pid);
-    if(!product) {
-        res.status(400).send("Producto no encontrado");
-        return;
+    catch(err){
+        res.send("Producto no encontrado")
     }
-    res.send(JSON.stringify(product));
 });
 
-router.post("/", (req, res) => {
-    console.log("Haciendo un POST");
-    try {
-        const newProduct = new Product(req.body);
-        const manejadorDeProductos = new ProductManager();
-        manejadorDeProductos.getProducts(); //traigo los productos del archivo productos.json
-        if(manejadorDeProductos.addProduct(newProduct))
-            res.status(201).send("Producto agregado")
-        else
-            res.status(400).send("El Code ya existe")
-    }catch (error) {    
-        res.status(400).send("Error al crear el producto");
-    };
-});
+/*
+[
+    {
+        "title":"Pero",
+        "description":"Perosa",
+        "code":"sfladkfjs", // no se puede repetir
+        "price":"1234"
+    },
+    {
+        "title":"Papa",
+        "description":"Perosa",
+        "code":"adsjfsad",
+        "price":"123",
+    }
+]
 
-router.put("/:pid",(req, res) => {
+*/
+router.post("/", async (req, res) => {
     const newProduct = new Product(req.body);
-    const manejadorDeProductos = new ProductManager();
-    manejadorDeProductos.getProducts(); //traigo los productos del archivo productos.json
-    if(manejadorDeProductos.updateProduct(req.params.pid, newProduct)) //le paso el pid ingresado en la url y ejecuto el método para actualizar todas las propiedades del producto.
-        res.status(200).send("Producto actualizado")
-    else
-        res.status(404).send("El ID no existe")
+    try{
+        await productModel.create(newProduct)
+        res.status(200).send("Producto agregado correctamente");
+    }
+    catch (err){
+        console.log("Error: ", err)
+        res.status(400).send("Error al agregar el producto a mongo")
+    }
 });
 
-router.delete("/:pid",(req, res) => {
-    const manejadorDeProductos = new ProductManager();
-    manejadorDeProductos.getProducts(); //traigo los productos del archivo productos.json
-    if(manejadorDeProductos.deleteProductByID(req.params.pid))
-        res.status(200).send("Producto eliminado")
-    else
-        res.status(404).send("No existe el producto")
+router.put("/:pid",async (req, res) => {
+    const newProduct = new Product(req.body);
+    try{
+        await productModel.updateOne({_id:req.params.pid},newProduct)
+        res.status(200).send("Producto editado correctamente");
+    }
+    catch (err){
+        console.log("Error: ", err)
+        res.status(400).send("Error al editar el producto")
+    }
+});
+
+router.delete("/:pid",async (req, res) => {
+    try{
+        const pid = req.params.pid;
+        await productModel.deleteOne({_id: pid})
+        res.send("Producto eliminado correctamente");
+    }
+    catch(err){
+        res.send("Producto no encontrado")
+    }
 });
 
 export default router;

@@ -33,10 +33,10 @@ export class ProductManager {
     async getProducts(){
         try{
                     //console.log("Nuevo array desde fs " + this.path)
-        //this.products = JSON.parse(fs.readFileSync(this.path))
-        this.products = await productModel.find()
-        console.log("console log de test", this.products)
-        return this.products
+            //this.products = JSON.parse(fs.readFileSync(this.path))
+            let products = await productModel.find()
+            console.log("Estoy en getProducts", products)
+            return products
         }
         catch(err){
             console.log("Error al leer mongodb", err)
